@@ -1,0 +1,15 @@
+body {
+    height: 100vh;
+}
+
+.login-form {
+    width: 360px;
+    margin: 0 auto !important;
+}
+
+.footer {
+    text-align: center;
+    width: 360px;
+    margin: 0 auto !important;
+}
+
