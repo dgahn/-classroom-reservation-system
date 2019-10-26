@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
+import me.dgahn.crs.account.AccountDto.AccountRegisterFormDto;
 import me.dgahn.crs.accountreservation.AccountReservation;
 import me.dgahn.crs.reservation.Reservation;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -44,13 +46,24 @@ public class Account {
   @Column(nullable = false)
   private String email;
 
-  @Column(nullable = false, columnDefinition = "boolean default false")
-  private boolean isSuperUser;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private AccountRole role;
 
   @OneToMany(mappedBy = "account")
   private List<Reservation> reservations = new ArrayList<>();
 
   @OneToMany(mappedBy = "account")
   private List<AccountReservation> accountReservations = new ArrayList<>();
+
+  public static Account createSaveAccount(AccountRegisterFormDto formDto) {
+    return Account.builder()
+                  .id(formDto.getId())
+                  .password(formDto.getPassword())
+                  .name(formDto.getName())
+                  .email(formDto.getEmail())
+                  .role(AccountRole.BASIC)
+                  .build();
+  }
 
 }

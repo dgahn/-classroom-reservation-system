@@ -2,8 +2,15 @@ body {
     height: 100vh;
 }
 
-.login-form {
+.input-form-box {
     width: 360px;
+    margin: 0 auto !important;
+}
+
+.error-box {
+    position: relative;
+    top: 250px;
+    width: 500px;
     margin: 0 auto !important;
 }
 

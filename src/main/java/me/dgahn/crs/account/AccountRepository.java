@@ -18,8 +18,13 @@ public class AccountRepository {
     em.persist(account);
   }
 
+  public Account findByAccountId(Long accountId) {
+    return em.find(Account.class, accountId);
+  }
+
   public Optional<Account> findById(String id) {
-    List<Account> account = em.createQuery("SELECT a FROM Account a", Account.class)
+    List<Account> account = em.createQuery("SELECT a FROM Account a WHERE a.id = :id", Account.class)
+                              .setParameter("id", id)
                               .getResultList();
     return account.size() == 0 ? Optional.empty() : Optional.of(account.get(0));
   }

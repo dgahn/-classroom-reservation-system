@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<body>
+<body style="background: #f5f5f5">
+<div class="error-box row" align="center">
+    <div class="col-12">
+        <img src="https://imgur.com/aqexxon.png" alt="" style="width: 40%;">
+    </div>
+    <p style="margin: 10px;">
+    <h2 class="col-12">ERROR</h2>
+    <h5 class="col-12" th:if="${e != null}">
+        <span th:text="${e.httpStatusCode}">500</span> : <span th:text="${e.message}"></span>
+    </h5>
+    <h5 class="col-12" th:if="${e == null}">
+        <span>500</span> : <span>서버 내부 오류입니다.</span>
+    </h5>
+    </p>
+</div>
+</body>
+</body>
+</html>
