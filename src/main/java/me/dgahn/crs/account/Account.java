@@ -9,6 +9,7 @@ import me.dgahn.crs.account.AccountDto.AccountRegisterFormDto;
 import me.dgahn.crs.accountreservation.AccountReservation;
 import me.dgahn.crs.reservation.Reservation;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -25,7 +26,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Builder
 @Table(name = "account")
 public class Account {
@@ -50,10 +50,10 @@ public class Account {
   @Column(nullable = false)
   private AccountRole role;
 
-  @OneToMany(mappedBy = "account")
+  @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
   private List<Reservation> reservations = new ArrayList<>();
 
-  @OneToMany(mappedBy = "account")
+  @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
   private List<AccountReservation> accountReservations = new ArrayList<>();
 
   public static Account createSaveAccount(AccountRegisterFormDto formDto) {

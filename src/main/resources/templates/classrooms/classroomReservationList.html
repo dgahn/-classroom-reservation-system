@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="ko">
+<head th:replace="fragments/header :: header">
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"/>
+<div class="class-room-box row">
+    <div class="col-12" style="text-align: center; margin: 20px">
+        <h3 th:text="${classroom.number} + ' 예약 현황'"></h3>
+    </div>
+    <table class="table table-striped co-12" style="text-align: center">
+        <thead>
+        <tr>
+            <th>강의명</th>
+            <th>시작 시간</th>
+            <th>끝 시간</th>
+            <th>예약자</th>
+            <th>강사 및 조교</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="reservation : ${reservations}" th:if="${reservation.reservationStatus.name()} == 'APPROVAL'">
+            <td class="align-middle" th:text="${reservation.title}"></td>
+            <td class="align-middle" th:text="${reservation.startDate}"></td>
+            <td class="align-middle" th:text="${reservation.endDate}"></td>
+            <td class="align-middle" th:text="${reservation.account.name}"></td>
+            <td class="align-middle">
+                <div th:each="accountReservation : ${reservation.accountReservations}">
+                    <span th:text="${accountReservation.account.name}"></span>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#exampleModal">
+        예약
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade"
+         id="exampleModal"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form th:action="@{'/classrooms/'+${classroom.classroomId}+'/reservation'}"
+                      th:object="${form}"
+                      method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">강의실 예약</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label th:for="title">강의명</label>
+                            <input type="text"
+                                   th:field="*{title}"
+                                   class="form-control"
+                                   placeholder="강의명 (영문, 한글, 숫자로 구성된 4~10글자)"
+                                   pattern="[A-Za-z0-9가-힣]{4,10}" maxlength="10"
+                                   required>
+                        </div>
+                        <div class="form-group row">
+                            <label class="form-group col-12"
+                                   th:for="startDate">시작 시간
+                            </label>
+                            <div class="col-8">
+                                <input type="date"
+                                       th:field="*{startDate}"
+                                       class="form-control"
+                                       th:onfocus="'javascript:setStartTime()'"
+                                       required>
+                            </div>
+                            <div class="col-2">
+                                <select th:field="*{startHour}"
+                                        class="form-control">
+                                    <option value="09">09</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <select th:field="*{startMinute}"
+                                        class="form-control">
+                                    <option value="00">00</option>
+                                    <option value="30">30</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-12"
+                                   th:for="endDate">종료 시간</label>
+                            <div class="col-8">
+                                <input type="date"
+                                       th:field="*{endDate}"
+                                       class="form-control"
+                                       required>
+                            </div>
+                            <div class="col-2">
+                                <select th:field="*{endHour}"
+                                        class="form-control">
+                                    <option value="09">09</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <select th:field="*{endMinute}"
+                                        class="form-control">
+                                    <option value="00">00</option>
+                                    <option value="30">30</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-12"
+                                   th:for="assistants">
+                                강사 및 조교
+                            </label>
+                            <select class="selectpicker col-12"
+                                    name="assistants"
+                                    id="assistants"
+                                    multiple data-live-search="true"
+                                    style="padding: 0 !important;"
+                                    th:value="${form.assistants}">
+                                <div th:each="account : ${accounts}">
+                                    <option th:if="${account.name} != ${currentUsername}"
+                                            th:value="${account.name}"
+                                            th:text="${account.name}"></option>
+                                </div>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-primary">
+                            <input type="submit" value="Reservation"
+                                   style="border: none; color: white; background: none"
+                                   th:onfocus="'javascript:setStartTime()'">
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+<script>
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10){
+        dd='0'+dd
+    }
+    if(mm<10){
+        mm='0'+mm
+    }
+
+    today = yyyy+'-'+mm+'-'+dd;
+    document.getElementById("startDate").setAttribute("min", today);
+    document.getElementById("endDate").setAttribute("min", today);
+
+    function setStartTime() {
+        console.log(document.getElementById('endDate').getAttributeNames());
+        console.log(document.getElementById('endDate').getAttribute('id'));
+        console.log(document.getElementById('endDate').getAttribute('min'));
+        console.log(document.getElementById('endDate').getAttribute('value'));
+    }
+</script>
+</html>

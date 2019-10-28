@@ -1,7 +1,9 @@
 package me.dgahn.crs.classroom;
 
+import lombok.Getter;
 import me.dgahn.crs.reservation.Reservation;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +14,8 @@ import java.util.List;
 
 
 @Entity
-public class ClassRoom {
+@Getter
+public class Classroom {
 
   @Id @GeneratedValue
   private Long classroomId;
@@ -26,7 +29,7 @@ public class ClassRoom {
   @Column(nullable = false)
   private int capacity;
 
-  @OneToMany(mappedBy = "classRoom")
+  @OneToMany(mappedBy = "classroom", cascade = CascadeType.ALL)
   private List<Reservation> reservations = new ArrayList<>();
 
 }

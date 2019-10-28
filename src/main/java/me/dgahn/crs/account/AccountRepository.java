@@ -29,4 +29,25 @@ public class AccountRepository {
     return account.size() == 0 ? Optional.empty() : Optional.of(account.get(0));
   }
 
+  public Optional<List<Account>> findAll() {
+    List<Account> account = em.createQuery("SELECT a FROM Account a", Account.class)
+                              .getResultList();
+    return account.size() == 0 ? Optional.empty() : Optional.of(account);
+  }
+
+  public Optional<List<Account>> findByNames(List<String> names) {
+    List<Account> account = em.createQuery("SELECT a FROM Account a WHERE a.name IN :names", Account.class)
+                              .setParameter("names", names)
+                              .getResultList();
+    return account.size() == 0 ? Optional.empty() : Optional.of(account);
+  }
+
+  public Optional<Account> findByName(final String name) {
+    List<Account> account = em.createQuery("SELECT a FROM Account a WHERE a.id = :name", Account.class)
+                              .setParameter("name", name)
+                              .getResultList();
+
+    return account.size() == 0 ? Optional.empty() : Optional.of(account.get(0));
+  }
+
 }

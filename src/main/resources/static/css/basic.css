@@ -7,6 +7,11 @@ body {
     margin: 0 auto !important;
 }
 
+.class-room-box {
+    width: 800px;
+    margin: 0 auto !important;
+}
+
 .error-box {
     position: relative;
     top: 250px;

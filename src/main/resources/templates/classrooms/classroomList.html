@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/header :: header">
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar" />
+<div class="class-room-box row">
+    <div class="col-12" style="text-align: center; margin: 20px">
+        <h3>강의실 목록</h3>
+    </div>
+    <table class="table table-striped col" style="text-align: center">
+        <thead>
+        <tr>
+            <th>층</th>
+            <th>강의실</th>
+            <th>정원</th>
+            <th>예약 조회</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="classroom : ${classrooms}">
+            <td th:text="${classroom.floor}"></td>
+            <td th:text="${classroom.number}"></td>
+            <td th:text="${classroom.capacity}"></td>
+            <td>
+                <a th:href="'javascript:reservationList('+${classroom.classroomId}+')'">예약 조회</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+<script>
+    function reservationList(id) {
+        console.log("reservationList called!!")
+        var form = document.createElement("form");
+        form.setAttribute("method", "get");
+        form.setAttribute("action", "/classrooms/" + id + "/reservations");
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+
+</html>
